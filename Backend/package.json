@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "API to handle the taking if notes for ones DnD campaign",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "server": "nodemon index.js"
+  },
   "author": "Phillip Smith",
   "license": "MIT",
   "dependencies": {
