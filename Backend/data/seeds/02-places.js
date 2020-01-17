@@ -7,7 +7,6 @@ exports.seed = function(knex) {
     .then(async function() {
       // Inserts seed entries
       const { id } = await db("kingdoms").first();
-      console.log(id);
       return knex("locations").insert([
         {
           name: "The Capital",
