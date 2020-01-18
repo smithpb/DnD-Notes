@@ -34,4 +34,14 @@ router.post("/new", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await NPCs.remove(id);
+    res.status(201).json({ message: "That character was deleted" });
+  } catch (e) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
 module.exports = router;

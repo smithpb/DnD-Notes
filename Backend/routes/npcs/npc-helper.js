@@ -3,7 +3,8 @@ const db = require("../../data/dbConfig.js");
 module.exports = {
   getAll,
   findByName,
-  create
+  create,
+  remove
 };
 
 async function getAll() {
@@ -28,6 +29,12 @@ async function findByName(name) {
 async function create(npc) {
   const [{ id }] = await db("npcs").insert(npc, ["id"]);
   return findByID(id);
+}
+
+function remove(id) {
+  return db("npcs")
+    .where({ id })
+    .del();
 }
 
 function findByID(id) {
