@@ -3,10 +3,30 @@ const Notes = require("./notes-helper.js");
 
 router.get("/", async (req, res) => {
   try {
-    const notes = Notes.getAll();
+    const notes = await Notes.getAll();
     res.status(200).json(notes);
   } catch (e) {
     res.status(500).json({ error: "Something went wrong." });
+  }
+});
+
+router.post("/new", async (req, res) => {
+  const note = req.body;
+  try {
+    const newNote = await Notes.create(note);
+    res.status(202).json(newNote);
+  } catch (e) {
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Notes.remove(id);
+    res.status(201).json({ message: "Note was successfully deleted." });
+  } catch (e) {
+    res.status(500).json({ error: "Something went wrong with the server." });
   }
 });
 
