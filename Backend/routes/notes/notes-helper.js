@@ -3,7 +3,8 @@ const db = require("../../data/dbConfig.js");
 module.exports = {
   getAll,
   create,
-  remove
+  remove,
+  update
 };
 
 async function getAll() {
@@ -22,6 +23,13 @@ function remove(id) {
   return db("notes")
     .where({ id })
     .del();
+}
+
+async function update(note) {
+  const [{ id }] = await db("notes")
+    .where("id", note.id)
+    .update(note, ["id"]);
+  return findByID(id);
 }
 
 function findByID(id) {
