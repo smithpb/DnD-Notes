@@ -11,8 +11,26 @@ module.exports = {
 async function getAll() {
   const notes = await db("notes as n")
     .join("locations as l", "n.location_id", "l.id")
-    .select("n.id", "n.text", "n.is_quest", "n.created_at", "l.name");
-  return notes;
+    .select(
+      "n.id",
+      "n.text",
+      "n.is_quest",
+      "n.created_at",
+      "l.name as location"
+    );
+
+  async function getFullNotes() {
+    return Promise.all(
+      notes.map(async note => {
+        const tags = await findTagsByNote(note.id);
+        note.tags = tags;
+        return note;
+      })
+    );
+  }
+
+  const fullNotes = await getFullNotes();
+  return fullNotes;
 }
 
 async function create(note) {
