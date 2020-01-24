@@ -4,7 +4,8 @@ module.exports = {
   getAll,
   create,
   remove,
-  update
+  update,
+  makeTags
 };
 
 async function getAll() {
@@ -31,6 +32,37 @@ async function update(note) {
     .update(note, ["id"]);
   return findByID(id);
 }
+
+async function makeTags(tags, noteID) {
+  await db.transaction(trx => {
+    const promises = tags.map(tag => {
+      const newTag = {};
+      newTag["note_id"] = noteID;
+      newTag["npc_id"] = tag;
+      return db("notes-npcs").insert(newTag);
+    });
+    return Promise.all(promises)
+      .then(trx.commit)
+      .catch(trx.rollback);
+  });
+
+  const finalTags = await findTagsByNote(noteID);
+
+  return finalTags;
+}
+
+function findTagsByNote(noteID) {
+  return db("notes-npcs as nn")
+    .select("p.id", "p.name")
+    .where("n.id", noteID)
+    .join("notes as n", "nn.note_id", "n.id")
+    .join("npcs as p", "nn.npc_id", "p.id");
+}
+
+// Test NPC ID's:
+// 6c16990f-eeb1-4068-97d3-84253ca50208
+// 75c043c8-cbeb-4d01-b7c2-195de27c7af0
+// a5912648-7885-44e9-867a-4caf13ccf684
 
 function findByID(id) {
   return db("notes")

@@ -20,6 +20,17 @@ router.post("/new", async (req, res) => {
   }
 });
 
+router.post("/:id/tags", async (req, res) => {
+  const { tags } = req.body;
+  const { id } = req.params;
+  try {
+    const newTags = await Notes.makeTags(tags, id);
+    res.status(201).json(newTags);
+  } catch (e) {
+    res.status(500).json({ error: "Something went wrong with the server." });
+  }
+});
+
 router.put("/:id", async (req, res) => {
   const note = req.body;
   const { id } = req.params;
