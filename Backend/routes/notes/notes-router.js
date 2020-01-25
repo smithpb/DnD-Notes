@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/new", async (req, res) => {
+router.post("/", async (req, res) => {
   const note = req.body;
   try {
     const newNote = await Notes.create(note);
@@ -36,7 +36,6 @@ router.put("/:id", async (req, res) => {
   const note = req.body;
   const { id } = req.params;
   note.id = id;
-  console.log(note);
   try {
     const updatedNote = await Notes.update(note);
     res.status(202).json(updatedNote);

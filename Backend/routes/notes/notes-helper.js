@@ -17,6 +17,7 @@ async function getAll() {
       "n.is_quest",
       "n.created_at",
       "l.name as location"
+      // "n.author_id"
     );
 
   async function getFullNotes() {
