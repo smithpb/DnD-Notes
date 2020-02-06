@@ -9,6 +9,7 @@ const kingdomsRouter = require("../routes/kingdoms/kingdom-router.js");
 const npcRouter = require("../routes/npcs/npc-router.js");
 const locationsRouter = require("../routes/locations/location-router.js");
 const authRouter = require("../routes/auth/auth-router.js");
+const campaignRouter = require("../routes/campaigns/campaign-router.js");
 
 server.use(helmet());
 server.use(express.json());
@@ -19,5 +20,6 @@ server.use("/api/kingdoms", kingdomsRouter);
 server.use("/api/npcs", npcRouter);
 server.use("/api/locations", locationsRouter);
 server.use("/api/auth", authRouter);
+server.use("/api/campaigns", campaignRouter);
 
 module.exports = server;

@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { axiosWithAuth } from "../../util/axiosWithAuth";
 
-function LoginForm() {
+import { UserContext } from "../../contexts/userContext";
+
+function LoginForm({ history }) {
   const [inputs, setInputs] = useState({});
+  const [error, setError] = useState("");
+
+  const { user, setUser } = useContext(UserContext);
 
   const handleChange = event => {
     setInputs({ ...inputs, [event.target.name]: event.target.value });
@@ -14,11 +19,12 @@ function LoginForm() {
       .post("/auth/login", inputs)
       .then(res => {
         localStorage.setItem("jwt", res.data.token);
-        localStorage.setItem("DnDNotesUser", JSON.stringify(res.data.user));
-        console.log("Posted", res.data.token);
+        // localStorage.setItem("DnDNotesUser", JSON.stringify(res.data.user));
+        setUser(res.data.user);
+        history.push("/notes");
       })
       .catch(error => {
-        console.log(error);
+        setError(error.response.data.message);
       });
   };
 
@@ -39,6 +45,7 @@ function LoginForm() {
           onChange={handleChange}
           placeholder="Password"
         ></input>
+        {error && <p>{error}</p>}
         <button type="submit">OK</button>
       </form>
     </>

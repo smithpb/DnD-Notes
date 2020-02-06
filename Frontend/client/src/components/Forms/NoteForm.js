@@ -31,7 +31,7 @@ function NoteForm({ locations, addNote, history }) {
           value={input.text}
           onChange={handleChange}
         ></textarea>
-        <label for="is_quest">Quest?</label>
+        <label htmlFor="is_quest">Quest?</label>
         <input
           type="checkbox"
           checked={input["is_quest"]}

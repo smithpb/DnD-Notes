@@ -31,7 +31,7 @@ router.post("/login", checkCred, async (req, res) => {
       res.status(200).json({ token, user });
     }
   } catch (e) {
-    res.status(500).json({ error: "Something went wrong with the server." });
+    res.status(500).json({ message: "Credentials provided are invalid." });
   }
 });
 

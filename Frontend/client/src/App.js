@@ -7,12 +7,15 @@ import NoteForm from "./components/Forms/NoteForm";
 import LoginForm from "./components/Forms/LoginForm";
 import NoteList from "./components/Notes/NoteList";
 
+import { UserContext } from "./contexts/userContext";
+
 import "./App.css";
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [npcs, setNPCs] = useState([]);
   const [locations, setLocations] = useState([]);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     const noteReq = axiosWithAuth().get("notes");
@@ -54,20 +57,22 @@ function App() {
           <option key={npc.id}>{npc.name}</option>
         ))}
       </select> */}
-      <Route path="/login" component={LoginForm} />
-      <Route
-        path="/notes/new"
-        render={props => (
-          <NoteForm {...props} locations={locations} addNote={addNote} />
-        )}
-      />
-      <Route
-        exact
-        path="/notes"
-        render={props => (
-          <NoteList {...props} notes={notes} deleteNote={deleteNote} />
-        )}
-      />
+      <UserContext.Provider value={{ user, setUser }}>
+        <Route path="/login" component={LoginForm} />
+        <Route
+          path="/notes/new"
+          render={props => (
+            <NoteForm {...props} locations={locations} addNote={addNote} />
+          )}
+        />
+        <Route
+          exact
+          path="/notes"
+          render={props => (
+            <NoteList {...props} notes={notes} deleteNote={deleteNote} />
+          )}
+        />
+      </UserContext.Provider>
     </div>
   );
 }
