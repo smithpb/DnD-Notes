@@ -4,7 +4,8 @@ import axios from "axios";
 import { Route } from "react-router-dom";
 
 import NoteForm from "./components/Forms/NoteForm";
-import LoginForm from "./components/Forms/LoginForm.js";
+import LoginForm from "./components/Forms/LoginForm";
+import NoteList from "./components/Notes/NoteList";
 
 import "./App.css";
 
@@ -26,6 +27,21 @@ function App() {
     );
   }, []);
 
+  const addNote = note => {
+    setNotes([...notes, note]);
+  };
+
+  const deleteNote = noteID => {
+    axiosWithAuth()
+      .delete(`/notes/${noteID}`)
+      .then(res => {
+        console.log(res.data);
+        const newList = notes.filter(note => note.id !== noteID);
+        setNotes(newList);
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <div className="App">
       {/* <p>This is here now</p>
@@ -39,7 +55,19 @@ function App() {
         ))}
       </select> */}
       <Route path="/login" component={LoginForm} />
-      <NoteForm locations={locations} />
+      <Route
+        path="/notes/new"
+        render={props => (
+          <NoteForm {...props} locations={locations} addNote={addNote} />
+        )}
+      />
+      <Route
+        exact
+        path="/notes"
+        render={props => (
+          <NoteList {...props} notes={notes} deleteNote={deleteNote} />
+        )}
+      />
     </div>
   );
 }

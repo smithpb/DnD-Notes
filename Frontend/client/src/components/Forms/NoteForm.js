@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { getUserID } from "../../util/userInfo";
 import { axiosWithAuth } from "../../util/axiosWithAuth";
 
-function NoteForm({ locations }) {
+function NoteForm({ locations, addNote, history }) {
   const [input, setInput] = useState({
     is_quest: false,
     author_id: getUserID()
@@ -17,7 +17,8 @@ function NoteForm({ locations }) {
     axiosWithAuth()
       .post("/notes", input)
       .then(res => {
-        console.log(res.data);
+        addNote(res.data);
+        history.push("/notes");
       })
       .catch(err => console.log(err));
   };

@@ -27,7 +27,7 @@ async function getAll() {
 
 async function create(note) {
   const [{ id }] = await db("notes").insert(note, ["id"]);
-  return findByID(id);
+  return findNoteByID(id);
 }
 
 function remove(id) {
@@ -40,7 +40,7 @@ async function update(note) {
   const [{ id }] = await db("notes")
     .where("id", note.id)
     .update(note, ["id"]);
-  return findByID(id);
+  return findNoteByID(id);
 }
 
 async function makeTags(tags, noteID) {
@@ -74,21 +74,34 @@ function findTagsByNote(noteID) {
 // 75c043c8-cbeb-4d01-b7c2-195de27c7af0
 // a5912648-7885-44e9-867a-4caf13ccf684
 
-function findByID(id) {
-  return db("notes")
-    .where({ id })
-    .first();
-}
-
-function findNotes() {
+function findNoteByID(id) {
   return db("notes as n")
+    .where("n.id", id)
     .join("locations as l", "n.location_id", "l.id")
+    .join("users as u", "n.author_id", "u.id")
     .select(
       "n.id",
       "n.text",
       "n.is_quest",
       "n.created_at",
       "l.name as location",
+      "u.username as author",
+      "n.author_id"
+    )
+    .first();
+}
+
+function findNotes() {
+  return db("notes as n")
+    .join("locations as l", "n.location_id", "l.id")
+    .join("users as u", "n.author_id", "u.id")
+    .select(
+      "n.id",
+      "n.text",
+      "n.is_quest",
+      "n.created_at",
+      "l.name as location",
+      "u.username as author",
       "n.author_id"
     );
 }
