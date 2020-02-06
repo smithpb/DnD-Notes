@@ -9,18 +9,9 @@ module.exports = {
 };
 
 async function getAll() {
-  const notes = await db("notes as n")
-    .join("locations as l", "n.location_id", "l.id")
-    .select(
-      "n.id",
-      "n.text",
-      "n.is_quest",
-      "n.created_at",
-      "l.name as location"
-      // "n.author_id"
-    );
+  const notes = await findNotes();
 
-  async function getFullNotes() {
+  async function addTags() {
     return Promise.all(
       notes.map(async note => {
         const tags = await findTagsByNote(note.id);
@@ -30,7 +21,7 @@ async function getAll() {
     );
   }
 
-  const fullNotes = await getFullNotes();
+  const fullNotes = await addTags();
   return fullNotes;
 }
 
@@ -87,4 +78,17 @@ function findByID(id) {
   return db("notes")
     .where({ id })
     .first();
+}
+
+function findNotes() {
+  return db("notes as n")
+    .join("locations as l", "n.location_id", "l.id")
+    .select(
+      "n.id",
+      "n.text",
+      "n.is_quest",
+      "n.created_at",
+      "l.name as location",
+      "n.author_id"
+    );
 }

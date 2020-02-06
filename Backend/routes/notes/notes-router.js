@@ -4,7 +4,6 @@ const Notes = require("./notes-helper.js");
 router.get("/", async (req, res) => {
   try {
     const notes = await Notes.getAll();
-    // console.log(notes);
     res.status(200).json(notes);
   } catch (e) {
     res.status(500).json({ error: "Something went wrong." });
