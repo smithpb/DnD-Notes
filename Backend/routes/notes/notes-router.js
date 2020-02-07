@@ -6,7 +6,7 @@ router.get("/", async (req, res) => {
     const notes = await Notes.getAll();
     res.status(200).json(notes);
   } catch (e) {
-    res.status(500).json({ error: "Something went wrong." });
+    res.status(500).json({ message: "Something went wrong." });
   }
 });
 
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
     const newNote = await Notes.create(note);
     res.status(202).json(newNote);
   } catch (e) {
-    res.status(500).json({ error: "Something went wrong" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 });
 
@@ -27,7 +27,7 @@ router.post("/:id/tags", async (req, res) => {
     const newTags = await Notes.makeTags(tags, id);
     res.status(201).json(newTags);
   } catch (e) {
-    res.status(500).json({ error: "Something went wrong with the server." });
+    res.status(500).json({ message: "Something went wrong with the server." });
   }
 });
 
@@ -39,7 +39,7 @@ router.put("/:id", async (req, res) => {
     const updatedNote = await Notes.update(note);
     res.status(202).json(updatedNote);
   } catch (e) {
-    res.status(500).json({ error: "Something went wrong with the server." });
+    res.status(500).json({ message: "Something went wrong with the server." });
   }
 });
 
@@ -49,7 +49,7 @@ router.delete("/:id", async (req, res) => {
     await Notes.remove(id);
     res.status(201).json({ message: "Note was successfully deleted." });
   } catch (e) {
-    res.status(500).json({ error: "Something went wrong with the server." });
+    res.status(500).json({ message: "Something went wrong with the server." });
   }
 });
 

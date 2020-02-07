@@ -1,11 +1,13 @@
-import React, { useState } from "react";
-import { getUserID } from "../../util/userInfo";
+import React, { useState, useContext } from "react";
+// import { getUserID } from "../../util/userInfo";
 import { axiosWithAuth } from "../../util/axiosWithAuth";
+import { UserContext } from "../../contexts/userContext";
 
 function NoteForm({ locations, addNote, history }) {
+  const { user } = useContext(UserContext);
   const [input, setInput] = useState({
     is_quest: false,
-    author_id: getUserID()
+    author_id: user.id
   });
 
   const handleChange = event => {

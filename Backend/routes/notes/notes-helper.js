@@ -92,16 +92,20 @@ function findNoteByID(id) {
 }
 
 function findNotes() {
-  return db("notes as n")
-    .join("locations as l", "n.location_id", "l.id")
-    .join("users as u", "n.author_id", "u.id")
-    .select(
-      "n.id",
-      "n.text",
-      "n.is_quest",
-      "n.created_at",
-      "l.name as location",
-      "u.username as author",
-      "n.author_id"
-    );
+  return (
+    db("notes as n")
+      .join("locations as l", "n.location_id", "l.id")
+      .join("users as u", "n.author_id", "u.id")
+      // .join("campaigns as c", "n.campaign_id", "c.id")
+      .select(
+        "n.id",
+        "n.text",
+        "n.is_quest",
+        "n.created_at",
+        "l.name as location",
+        "u.username as author",
+        "n.author_id",
+        "n.campaign_id"
+      )
+  );
 }

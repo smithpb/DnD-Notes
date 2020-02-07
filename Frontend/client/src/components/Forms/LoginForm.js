@@ -20,8 +20,9 @@ function LoginForm({ history }) {
       .then(res => {
         localStorage.setItem("jwt", res.data.token);
         // localStorage.setItem("DnDNotesUser", JSON.stringify(res.data.user));
+        console.log(res.data.user);
         setUser(res.data.user);
-        history.push("/notes");
+        history.push("/campaigns");
       })
       .catch(error => {
         setError(error.response.data.message);
