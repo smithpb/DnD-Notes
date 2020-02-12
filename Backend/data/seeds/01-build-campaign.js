@@ -68,32 +68,44 @@ exports.seed = function(knex) {
         {
           name: "The Capital",
           description: "The largest city in the realm",
-          kingdom_id: kingdoms[0].id
+          kingdom_id: kingdoms[0].id,
+          campaign_id: campaigns[0].id,
+          author_id: user.id
         },
         {
           name: "Small Villiage",
           description: "Tiny little town",
-          kingdom_id: kingdoms[0].id
+          kingdom_id: kingdoms[0].id,
+          campaign_id: campaigns[0].id,
+          author_id: user.id
         },
         {
           name: "Doomtown",
           description: "Nothing good happens here",
-          kingdom_id: kingdoms[1].id
+          kingdom_id: kingdoms[1].id,
+          campaign_id: campaigns[0].id,
+          author_id: user.id
         },
         {
           name: "Creepy Forest",
           description: "Did you hear that...?",
-          kingdom_id: kingdoms[1].id
+          kingdom_id: kingdoms[1].id,
+          campaign_id: campaigns[0].id,
+          author_id: user.id
         },
         {
           name: "Whitestone",
           description: "Where whitestone comes from",
-          kingdom_id: kingdoms[2].id
+          kingdom_id: kingdoms[2].id,
+          campaign_id: campaigns[0].id,
+          author_id: user.id
         },
         {
           name: "Daggerwaw",
           description: "Bad shit went down",
-          kingdom_id: kingdoms[2].id
+          kingdom_id: kingdoms[2].id,
+          campaign_id: campaigns[0].id,
+          author_id: user.id
         }
       ]);
       const locations = await knex("locations");

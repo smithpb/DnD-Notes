@@ -5,7 +5,7 @@ function CampaignList({ campaigns, select, history }) {
     select(prevUser => {
       return { ...prevUser, campaign_id: id };
     });
-    // history.push("/notes");
+    history.push("/notes");
   };
 
   return (

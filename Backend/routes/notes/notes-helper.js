@@ -11,23 +11,35 @@ module.exports = {
 async function getAll() {
   const notes = await findNotes();
 
-  async function addTags() {
-    return Promise.all(
-      notes.map(async note => {
-        const tags = await findTagsByNote(note.id);
-        note.tags = tags;
-        return note;
-      })
-    );
-  }
+  // async function addTags() {
+  //   return Promise.all(
+  //     notes.map(async note => {
+  //       const tags = await findTagsByNote(note.id);
+  //       note.tags = tags;
+  //       return note;
+  //     })
+  //   );
+  // }
 
-  const fullNotes = await addTags();
+  const fullNotes = await addTags(notes);
   return fullNotes;
+}
+
+async function addTags(notes) {
+  return Promise.all(
+    notes.map(async note => {
+      const tags = await findTagsByNote(note.id);
+      note.tags = tags;
+      return note;
+    })
+  );
 }
 
 async function create(note) {
   const [{ id }] = await db("notes").insert(note, ["id"]);
-  return findNoteByID(id);
+  const newNote = await findNoteByID(id);
+  const [fullNote] = await addTags([newNote]);
+  return fullNote;
 }
 
 function remove(id) {
@@ -86,7 +98,8 @@ function findNoteByID(id) {
       "n.created_at",
       "l.name as location",
       "u.username as author",
-      "n.author_id"
+      "n.author_id",
+      "n.campaign_id"
     )
     .first();
 }

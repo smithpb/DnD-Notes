@@ -3,7 +3,9 @@ import { axiosWithAuth } from "../../util/axiosWithAuth";
 
 import { UserContext } from "../../contexts/userContext";
 
-function LoginForm({ history }) {
+import { setFullUser } from "../../util/userInfo";
+
+function LoginForm({ history, fetchData }) {
   const [inputs, setInputs] = useState({});
   const [error, setError] = useState("");
 
@@ -18,10 +20,12 @@ function LoginForm({ history }) {
     axiosWithAuth()
       .post("/auth/login", inputs)
       .then(res => {
-        localStorage.setItem("jwt", res.data.token);
+        // localStorage.setItem("jwt", res.data.token);
         // localStorage.setItem("DnDNotesUser", JSON.stringify(res.data.user));
-        console.log(res.data.user);
-        setUser(res.data.user);
+        setFullUser(res.data.token, res.data.user);
+        // console.log(res.data.user);
+        // setUser(res.data.user);
+        fetchData();
         history.push("/campaigns");
       })
       .catch(error => {

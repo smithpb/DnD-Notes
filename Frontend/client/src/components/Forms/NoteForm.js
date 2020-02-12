@@ -7,7 +7,8 @@ function NoteForm({ locations, addNote, history }) {
   const { user } = useContext(UserContext);
   const [input, setInput] = useState({
     is_quest: false,
-    author_id: user.id
+    author_id: user.id,
+    campaign_id: user.campaign_id
   });
 
   const handleChange = event => {
@@ -19,6 +20,7 @@ function NoteForm({ locations, addNote, history }) {
     axiosWithAuth()
       .post("/notes", input)
       .then(res => {
+        console.log(res.data);
         addNote(res.data);
         history.push("/notes");
       })
@@ -48,9 +50,13 @@ function NoteForm({ locations, addNote, history }) {
         >
           <option value="">Where are you?</option>
           {locations.map(loc => (
-            <option key={loc.id} value={loc.id}>
-              {loc.name}
-            </option>
+            <>
+              {user.campaign_id === loc.campaign_id && (
+                <option key={loc.id} value={loc.id}>
+                  {loc.name}
+                </option>
+              )}
+            </>
           ))}
         </select>
         <button type="submit">Submit</button>

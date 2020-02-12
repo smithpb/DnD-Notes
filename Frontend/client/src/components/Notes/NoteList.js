@@ -1,7 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
-function NoteList({ notes, deleteNote, history }) {
+function NoteList({ notes, deleteNote }) {
   return (
     <div>
       {notes.map(note => (
@@ -9,10 +8,6 @@ function NoteList({ notes, deleteNote, history }) {
           {note.text} <span onClick={() => deleteNote(note.id)}>X</span>
         </p>
       ))}
-      {/* <button onClick={() => history.push("/notes/new")}>Add a new Note</button> */}
-      <Link to="/notes/new">
-        <button>Add a new Note</button>
-      </Link>
     </div>
   );
 }
