@@ -14,7 +14,7 @@ import CampaignList from "./components/Campaigns/CampaignList";
 
 import { UserContext } from "./contexts/userContext";
 
-import { getFullUser } from "./util/userInfo";
+import { getFullUser, setUserInfo } from "./util/userInfo";
 
 import "./App.css";
 
@@ -33,7 +33,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    localStorage.setItem("DnDNotesUser", JSON.stringify(user));
+    setUserInfo(user);
   }, [user]);
 
   useEffect(() => {
@@ -44,21 +44,26 @@ function App() {
   }, [user.campaign_id, notes]);
 
   const fetchData = () => {
-    const noteReq = axiosWithAuth().get("notes");
-    const npcReq = axiosWithAuth().get("npcs");
-    const locationReq = axiosWithAuth().get("locations");
-    const campaignReq = axiosWithAuth().get("campaigns");
-    axios.all([noteReq, npcReq, locationReq, campaignReq]).then(
-      axios.spread((...res) => {
-        const notes = res[0].data;
-        notes.sort(
-          (a, b) => Date.parse(a.created_at) - Date.parse(b.created_at)
-        );
-        setNotes(notes);
-        setNPCs(res[1].data);
-        setLocations(res[2].data);
-        setCampaigns(res[3].data);
-      })
+    const endpoints = ["notes", "npcs", "locations", "campaigns"];
+    const requests = endpoints.map(endpoint => axiosWithAuth().get(endpoint));
+
+    axios.all(requests).then(
+      axios.spread(
+        (
+          { data: notes },
+          { data: npcs },
+          { data: locations },
+          { data: campaigns }
+        ) => {
+          notes.sort(
+            (a, b) => Date.parse(a.created_at) - Date.parse(b.created_at)
+          );
+          setNotes(notes);
+          setNPCs(npcs);
+          setLocations(locations);
+          setCampaigns(campaigns);
+        }
+      )
     );
   };
 

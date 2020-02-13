@@ -20,7 +20,6 @@ function NoteForm({ locations, addNote, history }) {
     axiosWithAuth()
       .post("/notes", input)
       .then(res => {
-        console.log(res.data);
         addNote(res.data);
         history.push("/notes");
       })
