@@ -8,7 +8,8 @@ function NoteForm({ locations, addNote, history }) {
   const [input, setInput] = useState({
     is_quest: false,
     author_id: user.id,
-    campaign_id: user.campaign_id
+    campaign_id: user.campaign_id,
+    location_id: user.currentLocation.id
   });
 
   const handleChange = event => {
@@ -42,7 +43,7 @@ function NoteForm({ locations, addNote, history }) {
           value={input["is_quest"]}
           onChange={() => setInput({ ...input, is_quest: !input["is_quest"] })}
         ></input>
-        <select
+        {/* <select
           name="location_id"
           value={input["location_id"]}
           onChange={handleChange}
@@ -57,7 +58,7 @@ function NoteForm({ locations, addNote, history }) {
               )}
             </>
           ))}
-        </select>
+        </select> */}
         <button type="submit">Submit</button>
       </form>
     </>

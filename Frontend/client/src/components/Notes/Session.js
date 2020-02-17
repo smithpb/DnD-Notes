@@ -8,9 +8,7 @@ function Session({ notes, date, deleteNote }) {
 
   return (
     <>
-      <p onClick={() => setIsOpen(!isOpen)}>
-        {format(new Date(date), "LLL do, yyyy")}
-      </p>
+      <p onClick={() => setIsOpen(!isOpen)}>{date}</p>
       {isOpen && <NoteList notes={notes} deleteNote={deleteNote} />}
     </>
   );
