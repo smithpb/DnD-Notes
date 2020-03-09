@@ -20,9 +20,6 @@ exports.seed = function(knex) {
       return knex("kingdoms").del();
     })
     .then(() => {
-      return knex("npcs").del();
-    })
-    .then(() => {
       return knex("notes").del();
     })
     .then(async () => {

@@ -8,12 +8,12 @@ module.exports = {
 };
 
 async function getAll() {
-  const npcs = db("npcs");
+  const npcs = db("characters");
   return npcs;
 }
 
 async function findByName(name) {
-  const npc = await db("npcs as n")
+  const npc = await db("characters as n")
     .join("locations as l", "n.location_id", "l.id")
     .where("n.name", name)
     .select(
@@ -27,18 +27,18 @@ async function findByName(name) {
 }
 
 async function create(npc) {
-  const [{ id }] = await db("npcs").insert(npc, ["id"]);
+  const [{ id }] = await db("characters").insert(npc, ["id"]);
   return findByID(id);
 }
 
 function remove(id) {
-  return db("npcs")
+  return db("characters")
     .where({ id })
     .del();
 }
 
 function findByID(id) {
-  return db("npcs")
+  return db("characters")
     .where({ id })
     .first();
 }

@@ -10,6 +10,8 @@ module.exports = {
 
 async function getAll() {
   const notes = await findNotes();
+  // Temporary
+  return notes;
 
   // async function addTags() {
   //   return Promise.all(
@@ -21,8 +23,8 @@ async function getAll() {
   //   );
   // }
 
-  const fullNotes = await addTags(notes);
-  return fullNotes;
+  // const fullNotes = await addTags(notes);
+  // return fullNotes;
 }
 
 async function addTags(notes) {

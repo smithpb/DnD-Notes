@@ -35,6 +35,12 @@ router.post("/login", checkCred, async (req, res) => {
   }
 });
 
+router.get("/userinfo", async (req, res) => {
+  const users = await Users.getAll();
+
+  res.status(200).json(users);
+});
+
 function generateToken(user) {
   const payload = {
     subject: user.id,
