@@ -2,6 +2,7 @@ const db = require("../../data/dbConfig.js");
 
 module.exports = {
   getAll,
+  getCampaignNotes,
   create,
   remove,
   update,
@@ -11,20 +12,17 @@ module.exports = {
 async function getAll() {
   const notes = await findNotes();
   // Temporary
-  return notes;
+  // return notes;
 
-  // async function addTags() {
-  //   return Promise.all(
-  //     notes.map(async note => {
-  //       const tags = await findTagsByNote(note.id);
-  //       note.tags = tags;
-  //       return note;
-  //     })
-  //   );
-  // }
+  const fullNotes = await addTags(notes);
+  return fullNotes;
+}
 
-  // const fullNotes = await addTags(notes);
-  // return fullNotes;
+async function getCampaignNotes(id) {
+  const notes = await findNotesByCampaignID(id);
+
+  const fullNotes = await addTags(notes);
+  return fullNotes;
 }
 
 async function addTags(notes) {
@@ -37,11 +35,13 @@ async function addTags(notes) {
   );
 }
 
-async function create(note) {
+async function create(note, tags = []) {
   const [{ id }] = await db("notes").insert(note, ["id"]);
+  const newTags = await makeTags(tags, id);
   const newNote = await findNoteByID(id);
-  const [fullNote] = await addTags([newNote]);
-  return fullNote;
+  newNote.tags = newTags;
+  // const [fullNote] = await addTags([newNote]);
+  return newNote;
 }
 
 function remove(id) {
@@ -62,8 +62,8 @@ async function makeTags(tags, noteID) {
     const promises = tags.map(tag => {
       const newTag = {};
       newTag["note_id"] = noteID;
-      newTag["npc_id"] = tag;
-      return db("notes-npcs").insert(newTag);
+      newTag["char_id"] = tag;
+      return db("notes-chars").insert(newTag);
     });
     return Promise.all(promises)
       .then(trx.commit)
@@ -76,11 +76,11 @@ async function makeTags(tags, noteID) {
 }
 
 function findTagsByNote(noteID) {
-  return db("notes-npcs as nn")
-    .select("p.id", "p.name")
+  return db("notes-chars as nc")
+    .select("c.id", "c.char_name as name")
     .where("n.id", noteID)
-    .join("notes as n", "nn.note_id", "n.id")
-    .join("npcs as p", "nn.npc_id", "p.id");
+    .join("notes as n", "nc.note_id", "n.id")
+    .join("characters as c", "nc.char_id", "c.id");
 }
 
 // Test NPC ID's:
@@ -88,21 +88,23 @@ function findTagsByNote(noteID) {
 // 75c043c8-cbeb-4d01-b7c2-195de27c7af0
 // a5912648-7885-44e9-867a-4caf13ccf684
 
+const noteSelect = [
+  "n.id",
+  "n.text",
+  "n.is_quest",
+  "n.created_at",
+  "l.name as location",
+  "u.username as author",
+  "n.author_id",
+  "n.campaign_id"
+];
+
 function findNoteByID(id) {
   return db("notes as n")
     .where("n.id", id)
     .join("locations as l", "n.location_id", "l.id")
     .join("users as u", "n.author_id", "u.id")
-    .select(
-      "n.id",
-      "n.text",
-      "n.is_quest",
-      "n.created_at",
-      "l.name as location",
-      "u.username as author",
-      "n.author_id",
-      "n.campaign_id"
-    )
+    .select(noteSelect)
     .first();
 }
 
@@ -112,15 +114,15 @@ function findNotes() {
       .join("locations as l", "n.location_id", "l.id")
       .join("users as u", "n.author_id", "u.id")
       // .join("campaigns as c", "n.campaign_id", "c.id")
-      .select(
-        "n.id",
-        "n.text",
-        "n.is_quest",
-        "n.created_at",
-        "l.name as location",
-        "u.username as author",
-        "n.author_id",
-        "n.campaign_id"
-      )
+      .select(noteSelect)
   );
+}
+
+function findNotesByCampaignID(id) {
+  return db("notes as n")
+    .join("locations as l", "n.location_id", "l.id")
+    .join("users as u", "n.author_id", "u.id")
+    .where("n.campaign_id", id)
+    .orderBy("created_at")
+    .select(noteSelect);
 }

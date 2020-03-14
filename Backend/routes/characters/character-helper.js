@@ -8,8 +8,8 @@ module.exports = {
 };
 
 async function getAll() {
-  const npcs = db("characters");
-  return npcs;
+  const chars = db("characters");
+  return chars;
 }
 
 async function findByName(name) {

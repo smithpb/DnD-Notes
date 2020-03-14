@@ -10,10 +10,20 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
-  const note = req.body;
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
   try {
-    const newNote = await Notes.create(note);
+    const notes = await Notes.getCampaignNotes(id);
+    res.status(200).json(notes);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong with the server." });
+  }
+});
+
+router.post("/", async (req, res) => {
+  const { note, tags = [] } = req.body;
+  try {
+    const newNote = await Notes.create(note, tags);
     res.status(202).json(newNote);
   } catch (e) {
     res.status(500).json({ message: "Something went wrong" });
