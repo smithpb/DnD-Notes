@@ -1,10 +1,12 @@
 const router = require("express").Router();
+const { verify } = require("../util/middleware.js");
 
 const Campaigns = require("./campaign-helper.js");
 
-router.get("/", async (req, res) => {
+router.get("/", verify, async (req, res) => {
+  const user_id = req.decodedToken.subject;
   try {
-    const campaigns = await Campaigns.getAll();
+    const campaigns = await Campaigns.getAll(user_id);
     res.status(201).json(campaigns);
   } catch (e) {
     res.status(500).json({ message: "Something went wrong with the server." });

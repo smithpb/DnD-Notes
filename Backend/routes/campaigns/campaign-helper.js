@@ -5,8 +5,8 @@ module.exports = {
   create
 };
 
-function getAll() {
-  return db("campaigns");
+function getAll(author_id) {
+  return db("campaigns").where({ author_id });
 }
 
 async function create(campaign) {

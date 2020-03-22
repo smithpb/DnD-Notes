@@ -1,5 +1,9 @@
+const jwt = require("jsonwebtoken");
+const jwtSecret = process.env.JWT_SECRET;
+
 module.exports = {
-  checkCred
+  checkCred,
+  verify
 };
 
 function checkCred(req, res, next) {
@@ -11,5 +15,20 @@ function checkCred(req, res, next) {
     res
       .status(422)
       .json({ message: "Please provide both username and password" });
+  }
+}
+
+function verify(req, res, next) {
+  const token = req.headers.authorization;
+
+  if (token) {
+    jwt.verify(token, jwtSecret, (err, decoded) => {
+      if (err) res.status(401).json({ message: "User not verified" });
+
+      req.decodedToken = decoded;
+      next();
+    });
+  } else {
+    res.status(401).json({ message: "User not verified" });
   }
 }
