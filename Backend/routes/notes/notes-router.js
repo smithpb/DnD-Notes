@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const Notes = require("./notes-helper.js");
+const { verify } = require("../util/middleware.js");
 
-router.get("/", async (req, res) => {
+router.get("/", verify, async (req, res) => {
+  const user_id = req.decodedToken.subject;
   try {
-    const notes = await Notes.getAll();
+    const notes = await Notes.getAll(user_id);
     res.status(200).json(notes);
   } catch (e) {
     res.status(500).json({ message: "Something went wrong." });

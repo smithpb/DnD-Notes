@@ -5,8 +5,8 @@ module.exports = {
   create
 };
 
-async function getAll() {
-  const kingdoms = db("kingdoms");
+async function getAll(author_id) {
+  const kingdoms = db("kingdoms").where({ author_id });
   return kingdoms;
 }
 

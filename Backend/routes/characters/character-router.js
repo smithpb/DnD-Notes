@@ -1,9 +1,12 @@
 const router = require("express").Router();
 const Char = require("./character-helper.js");
+const { verify } = require("../util/middleware.js");
 
-router.get("/", async (req, res) => {
+router.get("/", verify, async (req, res) => {
+  const user_id = req.decodedToken.subject;
+
   try {
-    const npcs = await Char.getAll();
+    const npcs = await Char.getAll(user_id);
     res.status(200).json(npcs);
   } catch (e) {
     res.status(5000).json({ message: "Something went wrong" });

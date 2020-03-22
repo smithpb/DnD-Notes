@@ -9,8 +9,8 @@ module.exports = {
   makeTags
 };
 
-async function getAll() {
-  const notes = await findNotes();
+async function getAll(id) {
+  const notes = await findNotes(id);
   // Temporary
   // return notes;
 
@@ -108,14 +108,12 @@ function findNoteByID(id) {
     .first();
 }
 
-function findNotes() {
-  return (
-    db("notes as n")
-      .join("locations as l", "n.location_id", "l.id")
-      .join("users as u", "n.author_id", "u.id")
-      // .join("campaigns as c", "n.campaign_id", "c.id")
-      .select(noteSelect)
-  );
+function findNotes(author_id) {
+  return db("notes as n")
+    .join("locations as l", "n.location_id", "l.id")
+    .join("users as u", "n.author_id", "u.id")
+    .where("n.author_id", author_id)
+    .select(noteSelect);
 }
 
 function findNotesByCampaignID(id) {

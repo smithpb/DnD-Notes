@@ -7,8 +7,8 @@ module.exports = {
   remove
 };
 
-async function getAll() {
-  const chars = db("characters");
+async function getAll(author_id) {
+  const chars = db("characters").where({ author_id });
   return chars;
 }
 

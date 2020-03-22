@@ -1,9 +1,12 @@
 const router = require("express").Router();
 const Kingdoms = require("./kingdom-helper.js");
+const { verify } = require("../util/middleware.js");
 
-router.get("/", async (req, res) => {
+router.get("/", verify, async (req, res) => {
+  const user_id = req.decodedToken.subject;
+
   try {
-    const kingdoms = await Kingdoms.getAll();
+    const kingdoms = await Kingdoms.getAll(user_id);
     res.status(200).json(kingdoms);
   } catch (e) {
     res.status(500).json({ error: "Something went wrong." });
