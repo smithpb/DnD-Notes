@@ -3,7 +3,8 @@ const db = require("../../data/dbConfig.js");
 module.exports = {
   getAll,
   create,
-  remove
+  remove,
+  update
 };
 
 function getAll(author_id) {
@@ -12,6 +13,13 @@ function getAll(author_id) {
 
 async function create(campaign) {
   const [{ id }] = await db("campaigns").insert(campaign, ["id"]);
+  return getByID(id);
+}
+
+async function update(campaign) {
+  const [{ id }] = await db("campaigns")
+    .where("id", campaign.id)
+    .update(campaign, ["id"]);
   return getByID(id);
 }
 

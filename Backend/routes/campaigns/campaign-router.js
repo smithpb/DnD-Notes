@@ -25,4 +25,31 @@ router.post("/", verify, async (req, res) => {
   }
 });
 
+router.put("/", verify, async (req, res) => {
+  const campaign = req.body;
+  campaign.author_id = req.decodedToken.subject;
+
+  try {
+    const updatedCamp = await Campaigns.update(campaign);
+    res.status(201).json(updatedCamp);
+  } catch (e) {
+    res
+      .status(500)
+      .json({
+        message: "Server failed to update that campaign's information."
+      });
+  }
+});
+
+router.delete("/:id", verify, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await Campaigns.remove(id);
+    res.status(201).json({ message: "Campaign was successfully deleted." });
+  } catch (e) {
+    res.status(500).json({ message: "Server failed to delete that campaign." });
+  }
+});
+
 module.exports = router;
