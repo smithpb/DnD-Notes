@@ -13,8 +13,9 @@ router.get("/", verify, async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verify, async (req, res) => {
   const campaign = req.body;
+  campaign.author_id = req.decodedToken.subject;
 
   try {
     const newCampaign = await Campaigns.create(campaign);
