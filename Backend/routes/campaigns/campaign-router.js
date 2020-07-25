@@ -33,11 +33,9 @@ router.put("/", verify, async (req, res) => {
     const updatedCamp = await Campaigns.update(campaign);
     res.status(201).json(updatedCamp);
   } catch (e) {
-    res
-      .status(500)
-      .json({
-        message: "Server failed to update that campaign's information."
-      });
+    res.status(500).json({
+      message: "Server failed to update that campaign's information.",
+    });
   }
 });
 
@@ -49,6 +47,21 @@ router.delete("/:id", verify, async (req, res) => {
     res.status(201).json({ message: "Campaign was successfully deleted." });
   } catch (e) {
     res.status(500).json({ message: "Server failed to delete that campaign." });
+  }
+});
+
+router.post("/:campaign_id/journey", verify, async (req, res) => {
+  const location = req.body;
+  location.author_id = req.decodedToken.subject;
+  location.campaign_id = req.params.campaign_id;
+
+  try {
+    await Campaigns.addDestination(location);
+    res.status(201).json({ message: "Destination successfully added." });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "Failed to add destination to the campaigns journey." });
   }
 });
 
