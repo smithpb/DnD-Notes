@@ -10,9 +10,10 @@ router.get("/verify", verify, async (req, res) => {
   const user_id = req.decodedToken.subject;
   try {
     const user = await Users.findByID(user_id);
-    res.status(200).json(user);
+    const token = generateToken(user);
+    res.status(200).json({ token, user });
   } catch (e) {
-    res.status(500).json({ message: "Something went wrong with the server." });
+    res.status(500).json({ message: "Token is no longer vaild." });
   }
 });
 
@@ -25,8 +26,8 @@ router.post("/register", checkCred, async (req, res) => {
     const newUser = await Users.create(user);
     const token = generateToken(newUser);
     res.status(201).json({ token, newUser });
-  } catch (e) {
-    res.status(500).json({ error: "Something went wrong with the server." });
+  } catch ({ message }) {
+    res.status(500).json({ message });
   }
 });
 
@@ -56,11 +57,11 @@ router.get("/userinfo", async (req, res) => {
 function generateToken(user) {
   const payload = {
     subject: user.id,
-    username: user.username
+    username: user.username,
   };
 
   const options = {
-    expiresIn: "1d"
+    expiresIn: "1d",
   };
 
   return jwt.sign(payload, jwtSecret, options);

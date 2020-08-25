@@ -11,6 +11,9 @@ exports.seed = function (knex) {
       return knex("users").insert({
         username: "testuser",
         password: hash,
+        email: "test@test.com",
+        firstName: "John",
+        lastName: "Johnson",
       });
     })
     .then(() => {
