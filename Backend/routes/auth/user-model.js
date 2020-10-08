@@ -23,11 +23,16 @@ async function create(user) {
   }
 }
 
-async function findUsername(username) {
-  const user = await db("users").where({ username }).first();
+async function findUsername(userInfo) {
+  const user = await db("users")
+    .where({ username: userInfo })
+    .orWhere({ email: userInfo })
+    .first();
   return user;
 }
 
-function findByID(id) {
-  return db("users").select("username", "id").where({ id }).first();
+async function findByID(id) {
+  const user = await db("users").where({ id }).first();
+  delete user.password;
+  return user;
 }
