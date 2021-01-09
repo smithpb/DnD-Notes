@@ -7,7 +7,7 @@ const { checkCred, verify } = require("../util/middleware.js");
 const jwtSecret = process.env.JWT_SECRET;
 
 router.get("/verify", verify, async (req, res) => {
-  const user_id = req.decodedToken.subject;
+  const user_id = req.decodedToken?.subject;
   try {
     const user = await Users.findByID(user_id);
     const token = generateToken(user);
@@ -35,9 +35,8 @@ router.post("/login", checkCred, async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await Users.findUsername(username);
-    if (bcrypt.compareSync(password, user.password)) {
-      delete user.password;
+    const { password: hash, ...user } = await Users.findUsername(username);
+    if (bcrypt.compareSync(password, hash)) {
       const token = generateToken(user);
       res.status(200).json({ token, user });
     } else {

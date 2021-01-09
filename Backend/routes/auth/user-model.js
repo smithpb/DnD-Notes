@@ -32,7 +32,6 @@ async function findUsername(userInfo) {
 }
 
 async function findByID(id) {
-  const user = await db("users").where({ id }).first();
-  delete user.password;
+  const { password, ...user } = await db("users").where({ id }).first();
   return user;
 }
