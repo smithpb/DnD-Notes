@@ -13,8 +13,9 @@ async function getAll() {
 }
 
 async function create(user) {
+  const newUser = { ...user, username: user.username.toLowerCase() };
   try {
-    const [{ id }] = await db("users").insert(user, ["id"]);
+    const [{ id }] = await db("users").insert(newUser, ["id"]);
     return findByID(id);
   } catch (error) {
     if (error.constraint.includes("username_unique")) {
@@ -24,9 +25,10 @@ async function create(user) {
 }
 
 async function findUsername(userInfo) {
+  const username = userInfo.toLowerCase();
   const user = await db("users")
-    .where({ username: userInfo })
-    .orWhere({ email: userInfo })
+    .where({ username: username })
+    .orWhere({ email: username })
     .first();
   return user;
 }
